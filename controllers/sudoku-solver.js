@@ -1,3 +1,5 @@
+const solve_intenral = require('./solver-internal');
+
 class SudokuSolver {
 
   validate(puzzleString) {
@@ -90,7 +92,7 @@ class SudokuSolver {
     if (valid !== true) {
       return valid;
     }
-    return { error: 'Puzzle cannot be solved' };
+    return solve_intenral(puzzleString)
   }
 }
 
