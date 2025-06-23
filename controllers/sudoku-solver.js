@@ -1,7 +1,16 @@
 class SudokuSolver {
 
   validate(puzzleString) {
-    return /^[1-9.]{81}$/.test(puzzleString)
+    if (typeof puzzleString !== "string") {
+      return { error: 'Required field missing' }
+    }
+    if (/^[1-9.]{81}$/.test(puzzleString)) {
+      return true;
+    }
+    if (puzzleString.length === 81) {
+      return { error: 'Invalid characters in puzzle' };
+    }
+    return { error: 'Expected puzzle to be 81 characters long' }
   }
 
   checkRowPlacement(puzzleString, row, column, value) {
@@ -45,6 +54,19 @@ class SudokuSolver {
   }
 
   check(puzzleString, coordinate, value) {
+    if (!puzzleString || !coordinate || !value) {
+      return { error: 'Required field(s) missing' }
+    }
+    const valid = this.validate(puzzleString);
+    if (valid !== true) {
+      return valid;
+    }
+    if (!/^[1-9]$/.test(value)) {
+      return { error: 'Invalid value' };
+    }
+    if (!/^[A-I][1-9]$/.test(coordinate)) {
+      return { error: 'Invalid coordinate'};
+    }
     const row = coordinate[0].charCodeAt() - "A".charCodeAt();
     const col = Number(coordinate[1]) - 1;
     const conflict = [];
@@ -64,7 +86,11 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
-    
+    const valid = this.validate(puzzleString);
+    if (valid !== true) {
+      return valid;
+    }
+    return { error: 'Puzzle cannot be solved' };
   }
 }
 

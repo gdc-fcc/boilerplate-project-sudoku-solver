@@ -13,6 +13,6 @@ module.exports = function (app) {
     
   app.route('/api/solve')
     .post((req, res) => {
-       res.json("TODO")
+       res.json(solver.solve(req.body.puzzle))
     });
 };
