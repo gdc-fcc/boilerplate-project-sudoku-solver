@@ -3,7 +3,8 @@ const assert = chai.assert;
 
 const Solver = require('../controllers/sudoku-solver.js');
 let solver = new Solver();
-const puzzle = "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..";
+const puzzle   = "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..";
+const solution = "769235418851496372432178956174569283395842761628713549283657194516924837947381625";
 
 suite('Unit Tests', () => {
     test('Logic handles a valid puzzle string of 81 characters', done => {
@@ -54,11 +55,19 @@ suite('Unit Tests', () => {
         assert.isFalse(valid);
         done();
     })
-    test('Valid puzzle strings pass the solver')
+    test('Valid puzzle strings pass the solver', done => {
+        const result = solver.solve(puzzle);
+        assert.isTrue(result.hasOwnProperty("solution"))
+        done()
+    })
     test('Invalid puzzle strings fail the solver', done => {
         const result = solver.solve("Z".repeat(81));
         assert.equal(result.error, 'Invalid characters in puzzle')
         done()
     })
-    test('Solver returns the expected solution for an incomplete puzzle')
+    test('Solver returns the expected solution for an incomplete puzzle', done => {
+        const result = solver.solve(puzzle);
+        assert.equal(result.solution, solution)
+        done()
+    })
 });

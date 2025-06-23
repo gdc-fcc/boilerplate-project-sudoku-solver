@@ -4,13 +4,23 @@ const assert = chai.assert;
 const server = require('../server');
 
 const puzzle = "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..";
-
+const solution = "769235418851496372432178956174569283395842761628713549283657194516924837947381625";
 
 chai.use(chaiHttp);
 
 suite('Functional Tests', () => {
     suite('Solve a puzzle with', () => {
-        test('valid puzzle string: POST request to /api/solve')
+        test('valid puzzle string: POST request to /api/solve', done => {
+            chai
+                .request(server)
+                .keepOpen()
+                .post('/api/solve')
+                .send({puzzle})
+                .end((_err, res) => {
+                    assert.equal(res.body.solution, solution)
+                    done()
+                })
+        })
         test('missing puzzle string: POST request to /api/solve', done => {
             chai
                 .request(server)
@@ -37,13 +47,23 @@ suite('Functional Tests', () => {
                 .request(server)
                 .keepOpen()
                 .post('/api/solve')
+                .send({ puzzle: puzzle.replace(4, 1) })
+                .end((_err, res) => {
+                    assert.equal(res.body.error, 'Puzzle cannot be solved')
+                    done()
+                })
+        })
+        test('Solve a puzzle no solution: POST request to /api/solve', done => {
+            chai
+                .request(server)
+                .keepOpen()
+                .post('/api/solve')
                 .send({ puzzle: puzzle.slice(1) })
                 .end((_err, res) => {
                     assert.equal(res.body.error, 'Expected puzzle to be 81 characters long')
                     done()
                 })
         })
-        test('Solve a puzzle no solution: POST request to /api/solve')
     })
     suite('Check a puzzle placement with', () => {
         test('all fields: POST request to /api/check', done => {
