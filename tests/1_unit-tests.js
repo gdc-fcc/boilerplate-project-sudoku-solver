@@ -14,12 +14,12 @@ suite('Unit Tests', () => {
     test('Logic handles a puzzle string with invalid characters (not 1-9 or .)', done => {
         const puzzle2 = puzzle.replace('4', 0);
         const valid = solver.validate(puzzle2);
-        assert.isFalse(valid);
+        assert.equal(valid.error, 'Invalid characters in puzzle');
         done();
     })
     test('Logic handles a puzzle string that is not 81 characters in length', done => {
         const valid = solver.validate(puzzle.slice(1));
-        assert.isFalse(valid);
+        assert.equal(valid.error, 'Expected puzzle to be 81 characters long');
         done();
     })
     test('Logic handles a valid row placement', done => {
@@ -55,6 +55,10 @@ suite('Unit Tests', () => {
         done();
     })
     test('Valid puzzle strings pass the solver')
-    test('Invalid puzzle strings fail the solver')
+    test('Invalid puzzle strings fail the solver', done => {
+        const result = solver.solve("Z".repeat(81));
+        assert.equal(result.error, 'Invalid characters in puzzle')
+        done()
+    })
     test('Solver returns the expected solution for an incomplete puzzle')
 });
